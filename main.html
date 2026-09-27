@@ -6,10 +6,10 @@
   <title>Project OS</title>
   <style>
     :root{
-      --bg:#0b0d10;
-      --panel:#12151a;
-      --panel-2:#171b21;
-      --line:#242a32;
+      --bg:#0e1116;
+      --panel:#171b22;
+      --panel-2:#1e242d;
+      --line:#2a323e;
       --text:#f2f5f7;
       --muted:#8d98a5;
       --accent:#7c5cff;
@@ -41,7 +41,7 @@
       border:1px solid var(--line);background:var(--panel-2);color:var(--text);
       border-radius:11px;padding:10px 14px
     }
-    .btn:hover{border-color:#3a4350}
+    .btn:hover{border-color:#4a5568}
     .btn.primary{background:var(--accent);border-color:var(--accent);font-weight:700}
     .btn.ghost{background:transparent}
     .layout{
@@ -60,7 +60,7 @@
     .card-body{padding:18px}
     .next-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
     .next-card{
-      background:linear-gradient(180deg,#181c23,#13171c);
+      background:linear-gradient(180deg,#20252f,#1a1f28);
       border:1px solid #2b3240;border-radius:14px;padding:14px
     }
     .next-card .project{font-size:12px;color:var(--muted);margin-bottom:8px}
@@ -69,9 +69,9 @@
     .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
     .project-card{
       background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:15px;
-      transition:.18s ease
+      transition:.18s ease;cursor:pointer
     }
-    .project-card:hover{transform:translateY(-2px);border-color:#3a4350}
+    .project-card:hover{transform:translateY(-2px);border-color:#4a5568}
     .project-top{display:flex;justify-content:space-between;gap:12px}
     .project-title{font-weight:800;font-size:17px}
     .project-desc{color:var(--muted);font-size:13px;line-height:1.45;margin:8px 0 14px}
@@ -80,7 +80,7 @@
       border:1px solid var(--line);padding:5px 9px;font-size:12px;color:var(--muted)
     }
     .progress{
-      height:8px;border-radius:999px;background:#0d1014;overflow:hidden;border:1px solid #20252c
+      height:8px;border-radius:999px;background:#10141a;overflow:hidden;border:1px solid #20252c
     }
     .progress > div{height:100%;background:linear-gradient(90deg,var(--accent),#32c5ff)}
     .progress-row{display:flex;align-items:center;gap:10px}
@@ -93,12 +93,14 @@
       display:flex;align-items:center;justify-content:space-between;gap:12px;
       padding:11px 12px;background:var(--panel-2);border:1px solid var(--line);border-radius:11px
     }
+    .backlog-item{cursor:pointer}
+    .backlog-item:hover{border-color:#4a5568}
     .muted{color:var(--muted)}
     .quick-input{
       display:flex;gap:8px
     }
     .quick-input input{
-      flex:1;min-width:0;background:#0f1216;border:1px solid var(--line);color:var(--text);
+      flex:1;min-width:0;background:#13171e;border:1px solid var(--line);color:var(--text);
       padding:11px 12px;border-radius:11px;outline:none
     }
     .quick-input input:focus,.field input:focus,.field textarea:focus,.field select:focus{
@@ -106,7 +108,7 @@
     }
     .icon-btn{
       width:36px;height:36px;border-radius:10px;border:1px solid var(--line);
-      background:#11151a;color:var(--muted)
+      background:#161b23;color:var(--muted)
     }
     .icon-btn:hover{color:var(--text)}
     dialog{
@@ -122,7 +124,7 @@
     .field{display:grid;gap:7px;margin-bottom:14px}
     .field label{font-size:12px;color:var(--muted)}
     .field input,.field textarea,.field select{
-      width:100%;background:#0f1216;border:1px solid var(--line);color:var(--text);
+      width:100%;background:#13171e;border:1px solid var(--line);color:var(--text);
       border-radius:11px;padding:11px 12px;outline:none
     }
     .field textarea{min-height:90px;resize:vertical}
@@ -131,7 +133,7 @@
     }
     .milestone-head{
       display:flex;justify-content:space-between;align-items:center;
-      padding:12px 13px;background:#14181e
+      padding:12px 13px;background:#1b2029
     }
     .milestone-head strong{font-size:14px}
     .task-list{padding:8px 10px 10px;display:grid;gap:7px}
@@ -139,17 +141,17 @@
       display:grid;grid-template-columns:auto 1fr auto auto auto;gap:9px;align-items:center;
       padding:9px;border-radius:10px
     }
-    .task-row:hover{background:#11151a}
+    .task-row:hover{background:#161b23}
     .task-row.next{outline:1px solid rgba(124,92,255,.5);background:rgba(124,92,255,.08)}
     .task-row.done .task-name .t-title{text-decoration:line-through;color:var(--muted)}
     .task-name{line-height:1.35}
     .task-notes{font-size:12px;color:var(--muted);margin-top:3px;white-space:pre-wrap}
     .notes-area{
-      width:100%;background:#0f1216;border:1px solid var(--accent);color:var(--text);
+      width:100%;background:#13171e;border:1px solid var(--accent);color:var(--text);
       border-radius:8px;padding:8px;font:inherit;font-size:13px;resize:vertical;outline:none
     }
     .mini{
-      border:1px solid var(--line);background:#11151a;color:var(--muted);
+      border:1px solid var(--line);background:#161b23;color:var(--muted);
       border-radius:8px;padding:5px 8px;font-size:11px
     }
     .mini.next-on{color:white;background:var(--accent);border-color:var(--accent)}
@@ -240,7 +242,7 @@
       </aside>
     </div>
 
-    <div class="footer-note">Данные хранятся локально в браузере. Для переноса используй Export / Import.</div>
+    <div class="footer-note">Данные сохраняются на диск (data/) и дублируются в браузер. При переносе используй Export / Import.</div>
   </div>
 
   <dialog id="projectDialog">
@@ -400,7 +402,7 @@
 
       const projectsGrid = document.getElementById("projectsGrid");
       projectsGrid.innerHTML = active.length ? active.map(p=>`
-        <div class="project-card">
+        <div class="project-card" onclick="openProject('${p.id}')">
           <div class="project-top">
             <div>
               <div class="project-title">${esc(p.title)}</div>
@@ -414,18 +416,18 @@
           </div>
           <div class="project-meta">
             <span class="muted">${allTasks(p).filter(t=>t.done).length}/${allTasks(p).length} tasks</span>
-            <button class="text-btn" onclick="openProject('${p.id}')">Open →</button>
+            <span class="text-btn">Open →</span>
           </div>
         </div>`).join("") : `<div class="empty">Нет активных проектов.</div>`;
 
       const backlogList = document.getElementById("backlogList");
       backlogList.innerHTML = others.length ? others.map(p=>`
-        <div class="backlog-item">
+        <div class="backlog-item" onclick="openProject('${p.id}')">
           <div>
             <strong>${esc(p.title)}</strong>
             <div class="muted" style="font-size:12px;margin-top:3px">${esc(p.description || "")}</div>
           </div>
-          <button class="text-btn" onclick="openProject('${p.id}')">Open</button>
+          <span class="text-btn">Open →</span>
         </div>`).join("") : `<div class="empty">Backlog пуст.</div>`;
 
       const inboxList = document.getElementById("inboxList");
@@ -439,7 +441,8 @@
     function openProject(id=null){
       editingProjectId = id;
       const p = id ? state.projects.find(x=>x.id===id) : {
-        id: uid(), title:"", description:"", status:"active", milestones:[]
+        id: uid(), title:"", description:"", status:"active",
+        milestones: [{id: uid(), title: "M1", tasks: []}]
       };
 
       document.getElementById("dialogTitle").textContent = id ? "Edit project" : "New project";
@@ -463,7 +466,7 @@
     function renderMilestones(){
       const p = getTempProject();
       const wrap = document.getElementById("milestonesWrap");
-      wrap.innerHTML = (p.milestones || []).map(m=>`
+      wrap.innerHTML = (p.milestones || []).length ? (p.milestones || []).map(m=>`
         <div class="milestone">
           <div class="milestone-head">
             <strong>${esc(m.title)}</strong>
@@ -486,7 +489,7 @@
               <button class="mini" onclick="addTask('${m.id}')">+ Task</button>
             </div>
           </div>
-        </div>`).join("");
+        </div>`).join("") : `<div class="empty">Добавь milestone ниже — после этого можно будет добавлять задачи.</div>`;
     }
 
     function addMilestone(){
