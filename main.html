@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project OS</title>
+  <style>
+    :root{
+      --bg:#0b0d10;
+      --panel:#12151a;
+      --panel-2:#171b21;
+      --line:#242a32;
+      --text:#f2f5f7;
+      --muted:#8d98a5;
+      --accent:#7c5cff;
+      --accent-2:#a794ff;
+      --good:#3ddc97;
+      --warn:#ffcc66;
+      --danger:#ff6b6b;
+      --shadow:0 18px 50px rgba(0,0,0,.28);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    .app{max-width:1440px;margin:0 auto;padding:24px}
+    .topbar{
+      display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:38px;height:38px;border-radius:12px;
+      background:linear-gradient(135deg,var(--accent),#38bdf8);
+      box-shadow:0 10px 24px rgba(124,92,255,.25)
+    }
+    .brand h1{font-size:20px;margin:0}
+    .brand small{color:var(--muted)}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      border:1px solid var(--line);background:var(--panel-2);color:var(--text);
+      border-radius:11px;padding:10px 14px
+    }
+    .btn:hover{border-color:#3a4350}
+    .btn.primary{background:var(--accent);border-color:var(--accent);font-weight:700}
+    .btn.ghost{background:transparent}
+    .layout{
+      display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px
+    }
+    .stack{display:grid;gap:18px}
+    .card{
+      background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+      box-shadow:var(--shadow)
+    }
+    .card-head{
+      display:flex;justify-content:space-between;align-items:center;gap:10px;
+      padding:16px 18px;border-bottom:1px solid var(--line)
+    }
+    .card-head h2{font-size:14px;margin:0;letter-spacing:.08em;text-transform:uppercase}
+    .card-body{padding:18px}
+    .next-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .next-card{
+      background:linear-gradient(180deg,#181c23,#13171c);
+      border:1px solid #2b3240;border-radius:14px;padding:14px
+    }
+    .next-card .project{font-size:12px;color:var(--muted);margin-bottom:8px}
+    .next-card .task{font-weight:700;line-height:1.35}
+    .arrow{color:var(--accent-2);margin-right:6px}
+    .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+    .project-card{
+      background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:15px;
+      transition:.18s ease
+    }
+    .project-card:hover{transform:translateY(-2px);border-color:#3a4350}
+    .project-top{display:flex;justify-content:space-between;gap:12px}
+    .project-title{font-weight:800;font-size:17px}
+    .project-desc{color:var(--muted);font-size:13px;line-height:1.45;margin:8px 0 14px}
+    .pill{
+      display:inline-flex;align-items:center;gap:6px;border-radius:999px;
+      border:1px solid var(--line);padding:5px 9px;font-size:12px;color:var(--muted)
+    }
+    .progress{
+      height:8px;border-radius:999px;background:#0d1014;overflow:hidden;border:1px solid #20252c
+    }
+    .progress > div{height:100%;background:linear-gradient(90deg,var(--accent),#32c5ff)}
+    .progress-row{display:flex;align-items:center;gap:10px}
+    .progress-row .pct{font-size:12px;color:var(--muted);min-width:38px;text-align:right}
+    .project-meta{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+    .text-btn{background:none;border:0;color:var(--accent-2);padding:0;font-weight:700}
+    .section-title{margin:2px 0 10px;font-size:13px;color:#c8d0d8}
+    .list{display:grid;gap:8px}
+    .backlog-item,.inbox-item{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:11px 12px;background:var(--panel-2);border:1px solid var(--line);border-radius:11px
+    }
+    .muted{color:var(--muted)}
+    .quick-input{
+      display:flex;gap:8px
+    }
+    .quick-input input{
+      flex:1;min-width:0;background:#0f1216;border:1px solid var(--line);color:var(--text);
+      padding:11px 12px;border-radius:11px;outline:none
+    }
+    .quick-input input:focus,.field input:focus,.field textarea:focus,.field select:focus{
+      border-color:var(--accent)
+    }
+    .icon-btn{
+      width:36px;height:36px;border-radius:10px;border:1px solid var(--line);
+      background:#11151a;color:var(--muted)
+    }
+    .icon-btn:hover{color:var(--text)}
+    dialog{
+      width:min(760px,calc(100vw - 30px));max-height:88vh;overflow:auto;
+      background:var(--panel);color:var(--text);border:1px solid var(--line);
+      border-radius:18px;padding:0;box-shadow:0 28px 80px rgba(0,0,0,.5)
+    }
+    dialog::backdrop{background:rgba(0,0,0,.65);backdrop-filter:blur(3px)}
+    .modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px;border-bottom:1px solid var(--line)}
+    .modal-head h3{margin:0}
+    .modal-body{padding:18px}
+    .modal-actions{display:flex;justify-content:flex-end;gap:10px;padding:0 18px 18px}
+    .field{display:grid;gap:7px;margin-bottom:14px}
+    .field label{font-size:12px;color:var(--muted)}
+    .field input,.field textarea,.field select{
+      width:100%;background:#0f1216;border:1px solid var(--line);color:var(--text);
+      border-radius:11px;padding:11px 12px;outline:none
+    }
+    .field textarea{min-height:90px;resize:vertical}
+    .milestone{
+      border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:14px
+    }
+    .milestone-head{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:12px 13px;background:#14181e
+    }
+    .milestone-head strong{font-size:14px}
+    .task-list{padding:8px 10px 10px;display:grid;gap:7px}
+    .task-row{
+      display:grid;grid-template-columns:auto 1fr auto auto auto;gap:9px;align-items:center;
+      padding:9px;border-radius:10px
+    }
+    .task-row:hover{background:#11151a}
+    .task-row.next{outline:1px solid rgba(124,92,255,.5);background:rgba(124,92,255,.08)}
+    .task-row.done .task-name .t-title{text-decoration:line-through;color:var(--muted)}
+    .task-name{line-height:1.35}
+    .task-notes{font-size:12px;color:var(--muted);margin-top:3px;white-space:pre-wrap}
+    .notes-area{
+      width:100%;background:#0f1216;border:1px solid var(--accent);color:var(--text);
+      border-radius:8px;padding:8px;font:inherit;font-size:13px;resize:vertical;outline:none
+    }
+    .mini{
+      border:1px solid var(--line);background:#11151a;color:var(--muted);
+      border-radius:8px;padding:5px 8px;font-size:11px
+    }
+    .mini.next-on{color:white;background:var(--accent);border-color:var(--accent)}
+    .empty{
+      border:1px dashed #2c333d;border-radius:14px;padding:22px;color:var(--muted);text-align:center
+    }
+    .status-dot{width:7px;height:7px;border-radius:50%;display:inline-block;background:var(--muted)}
+    .status-active .status-dot{background:var(--good)}
+    .status-paused .status-dot{background:var(--warn)}
+    .status-done .status-dot{background:#38bdf8}
+    .danger{color:var(--danger)}
+    .footer-note{color:var(--muted);font-size:12px;text-align:center;padding:18px}
+    @media (max-width: 900px){
+      .layout{grid-template-columns:1fr}
+      .topbar{align-items:flex-start;flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>Project OS</h1>
+          <small>Projects → milestones → next actions</small>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn ghost" id="exportBtn">Export</button>
+        <button class="btn ghost" id="importBtn">Import</button>
+        <input id="importFile" type="file" accept=".json" hidden>
+        <button class="btn primary" id="newProjectBtn">+ New project</button>
+      </div>
+    </div>
+
+    <div class="layout">
+      <main class="stack">
+        <section class="card">
+          <div class="card-head">
+            <h2>Next</h2>
+            <span class="muted" id="nextCount"></span>
+          </div>
+          <div class="card-body">
+            <div class="next-grid" id="nextGrid"></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-head">
+            <h2>Active projects</h2>
+            <span class="muted" id="activeCount"></span>
+          </div>
+          <div class="card-body">
+            <div class="projects-grid" id="projectsGrid"></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-head"><h2>Backlog / Paused</h2></div>
+          <div class="card-body">
+            <div class="list" id="backlogList"></div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="stack">
+        <section class="card">
+          <div class="card-head"><h2>Inbox</h2></div>
+          <div class="card-body">
+            <div class="quick-input">
+              <input id="inboxInput" placeholder="Быстро записать мысль..." />
+              <button class="btn primary" id="addInboxBtn">+</button>
+            </div>
+            <div class="list" id="inboxList" style="margin-top:12px"></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-head"><h2>Focus</h2></div>
+          <div class="card-body">
+            <div class="section-title">Правило</div>
+            <div style="line-height:1.55;color:#d7dde4">
+              Держи активными 3–5 проектов. У каждого активного проекта — одна задача <strong>NEXT</strong>.
+            </div>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <div class="footer-note">Данные хранятся локально в браузере. Для переноса используй Export / Import.</div>
+  </div>
+
+  <dialog id="projectDialog">
+    <div class="modal-head">
+      <h3 id="dialogTitle">Project</h3>
+      <button class="icon-btn" onclick="projectDialog.close()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Название</label>
+        <input id="projectTitle" />
+      </div>
+      <div class="field">
+        <label>Цель / описание</label>
+        <textarea id="projectDescription"></textarea>
+      </div>
+      <div class="field">
+        <label>Статус</label>
+        <select id="projectStatus">
+          <option value="active">Active</option>
+          <option value="backlog">Backlog</option>
+          <option value="paused">Paused</option>
+          <option value="done">Done</option>
+        </select>
+      </div>
+
+      <div id="milestonesWrap"></div>
+
+      <div class="quick-input" style="margin-top:8px">
+        <input id="newMilestoneTitle" placeholder="Новый milestone..." />
+        <button class="btn" id="addMilestoneBtn">+ Milestone</button>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn danger" id="deleteProjectBtn">Удалить</button>
+      <button class="btn" onclick="projectDialog.close()">Закрыть</button>
+      <button class="btn primary" id="saveProjectBtn">Сохранить</button>
+    </div>
+  </dialog>
+
+  <script>
+    const STORAGE_KEY = "project_os_v1";
+    const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2));
+
+    const seed = {
+      projects: [
+        {
+          id: uid(),
+          title: "CEO Agent / IVA",
+          description: "Персональный AI-ассистент руководителя",
+          status: "active",
+          milestones: [
+            {
+              id: uid(),
+              title: "MVP",
+              tasks: [
+                {id: uid(), title: "Architecture", done: true, isNext: false},
+                {id: uid(), title: "Database", done: true, isNext: false},
+                {id: uid(), title: "PLAUD integration", done: true, isNext: false},
+                {id: uid(), title: "Email integration", done: false, isNext: true},
+                {id: uid(), title: "Cloud deployment", done: false, isNext: false},
+                {id: uid(), title: "Beta testing", done: false, isNext: false}
+              ]
+            }
+          ]
+        },
+        {
+          id: uid(),
+          title: "Idea Benchmark",
+          description: "Сервис оценки и сравнения стартап-идей",
+          status: "active",
+          milestones: [
+            {
+              id: uid(),
+              title: "Prototype",
+              tasks: [
+                {id: uid(), title: "Define evaluation criteria", done: true, isNext: false},
+                {id: uid(), title: "Build scoring engine", done: false, isNext: true},
+                {id: uid(), title: "Simple UI", done: false, isNext: false},
+                {id: uid(), title: "Test on 10 real ideas", done: false, isNext: false}
+              ]
+            }
+          ]
+        },
+        {
+          id: uid(),
+          title: "Supplier AI",
+          description: "Поиск и сравнение поставщиков для B2B",
+          status: "backlog",
+          milestones: []
+        }
+      ],
+      inbox: [
+        {id: uid(), text: "Посмотреть OpenAI Agents API"},
+        {id: uid(), text: "Идея: автоматический анализ конкурентов"}
+      ]
+    };
+
+    let state = load();
+    let editingProjectId = null;
+
+    function load(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : structuredClone(seed);
+      }catch{
+        return structuredClone(seed);
+      }
+    }
+    function save(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      fetch("/api/state", {
+        method: "PUT",
+        headers: {"content-type": "application/json"},
+        body: JSON.stringify(state)
+      }).catch(()=>console.warn("server sync unavailable, saved locally"));
+      render();
+    }
+    function boot(){
+      fetch("/api/state").then(r=>r.ok?r.json():null).then(d=>{
+        if(d && Array.isArray(d.projects) && Array.isArray(d.inbox)){
+          state = d;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          render();
+        }
+      }).catch(()=>{});
+    }
+    function esc(v=""){
+      return v.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+    }
+    function allTasks(p){
+      return (p.milestones || []).flatMap(m => m.tasks || []);
+    }
+    function progress(p){
+      const tasks = allTasks(p);
+      if(!tasks.length) return 0;
+      return Math.round(tasks.filter(t=>t.done).length / tasks.length * 100);
+    }
+    function nextTask(p){
+      return allTasks(p).find(t => t.isNext && !t.done);
+    }
+
+    function render(){
+      const active = state.projects.filter(p=>p.status==="active");
+      const others = state.projects.filter(p=>p.status!=="active" && p.status!=="done");
+
+      document.getElementById("activeCount").textContent = `${active.length} active`;
+      document.getElementById("nextCount").textContent = `${active.filter(nextTask).length} next actions`;
+
+      const nextGrid = document.getElementById("nextGrid");
+      const nexts = active.map(p=>({p,t:nextTask(p)})).filter(x=>x.t);
+      nextGrid.innerHTML = nexts.length ? nexts.map(({p,t})=>`
+        <div class="next-card">
+          <div class="project">${esc(p.title)}</div>
+          <div class="task"><span class="arrow">→</span>${esc(t.title)}</div>
+        </div>`).join("") : `<div class="empty">Пока нет NEXT-задач.</div>`;
+
+      const projectsGrid = document.getElementById("projectsGrid");
+      projectsGrid.innerHTML = active.length ? active.map(p=>`
+        <div class="project-card">
+          <div class="project-top">
+            <div>
+              <div class="project-title">${esc(p.title)}</div>
+              <div class="project-desc">${esc(p.description || "Без описания")}</div>
+            </div>
+            <span class="pill status-active"><span class="status-dot"></span>Active</span>
+          </div>
+          <div class="progress-row">
+            <div class="progress" style="flex:1"><div style="width:${progress(p)}%"></div></div>
+            <div class="pct">${progress(p)}%</div>
+          </div>
+          <div class="project-meta">
+            <span class="muted">${allTasks(p).filter(t=>t.done).length}/${allTasks(p).length} tasks</span>
+            <button class="text-btn" onclick="openProject('${p.id}')">Open →</button>
+          </div>
+        </div>`).join("") : `<div class="empty">Нет активных проектов.</div>`;
+
+      const backlogList = document.getElementById("backlogList");
+      backlogList.innerHTML = others.length ? others.map(p=>`
+        <div class="backlog-item">
+          <div>
+            <strong>${esc(p.title)}</strong>
+            <div class="muted" style="font-size:12px;margin-top:3px">${esc(p.description || "")}</div>
+          </div>
+          <button class="text-btn" onclick="openProject('${p.id}')">Open</button>
+        </div>`).join("") : `<div class="empty">Backlog пуст.</div>`;
+
+      const inboxList = document.getElementById("inboxList");
+      inboxList.innerHTML = state.inbox.length ? state.inbox.map(item=>`
+        <div class="inbox-item">
+          <span>${esc(item.text)}</span>
+          <button class="icon-btn" onclick="removeInbox('${item.id}')">✕</button>
+        </div>`).join("") : `<div class="empty">Inbox пуст.</div>`;
+    }
+
+    function openProject(id=null){
+      editingProjectId = id;
+      const p = id ? state.projects.find(x=>x.id===id) : {
+        id: uid(), title:"", description:"", status:"active", milestones:[]
+      };
+
+      document.getElementById("dialogTitle").textContent = id ? "Edit project" : "New project";
+      document.getElementById("projectTitle").value = p.title;
+      document.getElementById("projectDescription").value = p.description || "";
+      document.getElementById("projectStatus").value = p.status;
+      document.getElementById("deleteProjectBtn").style.display = id ? "" : "none";
+
+      document.getElementById("projectDialog").dataset.tempProject = JSON.stringify(structuredClone(p));
+      renderMilestones();
+      projectDialog.showModal();
+    }
+
+    function getTempProject(){
+      return JSON.parse(document.getElementById("projectDialog").dataset.tempProject);
+    }
+    function setTempProject(p){
+      document.getElementById("projectDialog").dataset.tempProject = JSON.stringify(p);
+      renderMilestones();
+    }
+    function renderMilestones(){
+      const p = getTempProject();
+      const wrap = document.getElementById("milestonesWrap");
+      wrap.innerHTML = (p.milestones || []).map(m=>`
+        <div class="milestone">
+          <div class="milestone-head">
+            <strong>${esc(m.title)}</strong>
+            <button class="mini danger" onclick="removeMilestone('${m.id}')">Remove</button>
+          </div>
+          <div class="task-list">
+            ${(m.tasks || []).map(t=>`
+              <div class="task-row ${t.done ? "done":""} ${t.isNext ? "next":""}">
+                <input type="checkbox" ${t.done ? "checked":""} onchange="toggleTask('${m.id}','${t.id}')">
+                <div class="task-name" ondblclick="editNotes('${m.id}','${t.id}',this)">
+                  <span class="t-title">${esc(t.title)}</span>
+                  ${t.notes ? `<div class="task-notes">${esc(t.notes)}</div>` : ""}
+                </div>
+                <button class="mini" title="Описание" onclick="editNotes('${m.id}','${t.id}',this.closest('.task-row').querySelector('.task-name'))">✎</button>
+                <button class="mini ${t.isNext ? "next-on":""}" onclick="setNext('${m.id}','${t.id}')">NEXT</button>
+                <button class="mini danger" onclick="removeTask('${m.id}','${t.id}')">✕</button>
+              </div>`).join("")}
+            <div class="quick-input">
+              <input id="task_${m.id}" placeholder="Добавить задачу..." onkeydown="if(event.key==='Enter') addTask('${m.id}')">
+              <button class="mini" onclick="addTask('${m.id}')">+ Task</button>
+            </div>
+          </div>
+        </div>`).join("");
+    }
+
+    function addMilestone(){
+      const title = document.getElementById("newMilestoneTitle").value.trim();
+      if(!title) return;
+      const p = getTempProject();
+      p.milestones.push({id:uid(), title, tasks:[]});
+      document.getElementById("newMilestoneTitle").value = "";
+      setTempProject(p);
+    }
+    function removeMilestone(mid){
+      const p = getTempProject();
+      p.milestones = p.milestones.filter(m=>m.id!==mid);
+      setTempProject(p);
+    }
+    function addTask(mid){
+      const input = document.getElementById(`task_${mid}`);
+      const title = input.value.trim();
+      if(!title) return;
+      const p = getTempProject();
+      const m = p.milestones.find(x=>x.id===mid);
+      m.tasks.push({id:uid(), title, done:false, isNext:false});
+      setTempProject(p);
+    }
+    function removeTask(mid,tid){
+      const p = getTempProject();
+      const m = p.milestones.find(x=>x.id===mid);
+      m.tasks = m.tasks.filter(t=>t.id!==tid);
+      setTempProject(p);
+    }
+    function toggleTask(mid,tid){
+      const p = getTempProject();
+      const t = p.milestones.find(x=>x.id===mid).tasks.find(x=>x.id===tid);
+      t.done = !t.done;
+      if(t.done) t.isNext = false;
+      setTempProject(p);
+    }
+    function editNotes(mid,tid,cell){
+      const p = getTempProject();
+      const t = p.milestones.find(x=>x.id===mid).tasks.find(x=>x.id===tid);
+      if(cell.querySelector("textarea")) return;
+      cell.innerHTML = `<textarea class="notes-area" rows="3" placeholder="Описание задачи...">${esc(t.notes || "")}</textarea>`;
+      const ta = cell.querySelector("textarea");
+      ta.focus();
+      ta.addEventListener("blur", () => {
+        const v = ta.value.trim();
+        if(v === (t.notes || "")) { renderMilestones(); return; }
+        t.notes = v;
+        setTempProject(p);
+      });
+    }
+    function setNext(mid,tid){
+      const p = getTempProject();
+      const target = p.milestones.find(x=>x.id===mid).tasks.find(x=>x.id===tid);
+      const newValue = !target.isNext;
+      allTasks(p).forEach(t=>t.isNext=false);
+      target.isNext = newValue && !target.done;
+      setTempProject(p);
+    }
+    function saveProject(){
+      const p = getTempProject();
+      p.title = document.getElementById("projectTitle").value.trim() || "Untitled project";
+      p.description = document.getElementById("projectDescription").value.trim();
+      p.status = document.getElementById("projectStatus").value;
+      if(editingProjectId){
+        const i = state.projects.findIndex(x=>x.id===editingProjectId);
+        state.projects[i] = p;
+      }else{
+        state.projects.push(p);
+      }
+      projectDialog.close();
+      save();
+    }
+    function deleteProject(){
+      if(!editingProjectId) return;
+      if(confirm("Удалить проект?")){
+        state.projects = state.projects.filter(p=>p.id!==editingProjectId);
+        projectDialog.close();
+        save();
+      }
+    }
+    function addInbox(){
+      const input = document.getElementById("inboxInput");
+      const text = input.value.trim();
+      if(!text) return;
+      state.inbox.unshift({id:uid(), text});
+      input.value = "";
+      save();
+    }
+    function removeInbox(id){
+      state.inbox = state.inbox.filter(i=>i.id!==id);
+      save();
+    }
+    function exportData(){
+      const blob = new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href=url;a.download="project-os-data.json";a.click();
+      URL.revokeObjectURL(url);
+    }
+    function importData(file){
+      const r = new FileReader();
+      r.onload = () => {
+        try{
+          const data = JSON.parse(r.result);
+          if(!data.projects || !data.inbox) throw new Error();
+          state = data; save();
+        }catch{
+          alert("Не удалось импортировать файл.");
+        }
+      };
+      r.readAsText(file);
+    }
+
+    document.getElementById("newProjectBtn").onclick = ()=>openProject();
+    document.getElementById("addMilestoneBtn").onclick = addMilestone;
+    document.getElementById("saveProjectBtn").onclick = saveProject;
+    document.getElementById("deleteProjectBtn").onclick = deleteProject;
+    document.getElementById("addInboxBtn").onclick = addInbox;
+    document.getElementById("inboxInput").addEventListener("keydown",e=>{if(e.key==="Enter") addInbox()});
+    document.getElementById("exportBtn").onclick = exportData;
+    document.getElementById("importBtn").onclick = ()=>document.getElementById("importFile").click();
+    document.getElementById("importFile").addEventListener("change",e=>{
+      if(e.target.files[0]) importData(e.target.files[0]);
+      e.target.value="";
+    });
+
+    render();
+    boot();
+  </script>
+</body>
+</html>

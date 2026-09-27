@@ -1,0 +1,9 @@
+services:
+  project-os:
+    build: .
+    container_name: project-os
+    ports:
+      - "8090:8080"
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
